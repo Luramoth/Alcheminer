@@ -1,16 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Alcheminer.Engine
 {
 	internal abstract class Transform
 	{
-		public Vector2 Position;
-		public Quaternion Rotation;
-		public Vector2 Scale;
+		public Vector2 Position { get; set; }
+		public Quaternion Rotation { get; set; }
+		public Vector2 Scale { get; set; }
 	}
 }

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Alcheminer.Engine
+﻿namespace Alcheminer.Engine
 {
 	internal abstract class Thing
 	{
-		public Transform transform;
+		public Transform transform { get; set; }
 
 		public abstract void Init();
 	}
