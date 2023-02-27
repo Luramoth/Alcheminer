@@ -1,3 +1,3 @@
 ﻿
-using var game = new Alcheminer.Game1();
+using var game = new Alcheminer.Alcheminer();
 game.Run();
