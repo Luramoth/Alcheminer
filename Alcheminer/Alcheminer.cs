@@ -1,16 +1,17 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Alcheminer.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Alcheminer
 {
-	public class Game1 : Microsoft.Xna.Framework.Game
+	public class Alcheminer : Microsoft.Xna.Framework.Game
 	{
 		Texture2D ballTex;
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 
-		public Game1()
+		public Alcheminer()
 		{
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
@@ -21,7 +22,6 @@ namespace Alcheminer
 		protected override void Initialize()
 		{
 			// TODO: Add your initialization logic here
-
 			base.Initialize();
 		}
 
