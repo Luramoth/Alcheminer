@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Alcheminer.Engine
 {
-	internal class Transform
+	internal abstract class Transform
 	{
 		public Vector2 Position;
 		public Quaternion Rotation;

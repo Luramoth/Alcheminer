@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Alcheminer.Engine
 {
-	internal class Thing
+	internal abstract class Thing
 	{
 		public Transform transform;
 
-		public extern void Init();
+		public abstract void Init();
 	}
 }
