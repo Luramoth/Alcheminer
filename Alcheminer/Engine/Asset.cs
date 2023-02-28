@@ -1,6 +1,6 @@
 ﻿namespace Alcheminer.Engine
 {
-	internal class Sprite
+	internal class Asset
 	{
 	}
 }
