@@ -2,7 +2,7 @@
 {
 	internal abstract class Thing
 	{
-		public Transform transform { get; set; }
+		public Transform Transform { get; set; }
 
 		public abstract void Init();
 	}
