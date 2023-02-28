@@ -9,7 +9,7 @@ namespace Alcheminer.Engine.Services
 
 		public static Stack<AssetID> AssetStack;
 
-		public static void ClearStacks()
+		public static void ClearIDs()
 		{
 			AssetStack.Clear();
 			ThingStack.Clear();
