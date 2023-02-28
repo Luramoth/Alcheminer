@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Alcheminer.Engine.Services
 {
@@ -11,8 +10,8 @@ namespace Alcheminer.Engine.Services
 
 		public static void ClearIDs()
 		{
-			AssetStack.Clear();
-			ThingStack.Clear();
+			if (AssetStack != null) AssetStack.Clear();
+			if (ThingStack != null) ThingStack.Clear();
 		}
 
 		public class ThingID
