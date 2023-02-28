@@ -6,5 +6,9 @@
         public Transform Transform { get; set; }
 
         public abstract void Init();
+
+        public abstract void Update();
+
+        public abstract void Destroy();
     }
 }

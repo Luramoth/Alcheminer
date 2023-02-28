@@ -62,6 +62,8 @@ namespace Alcheminer
 
 		protected override void EndRun()
 		{
+			Engine.Services.IDService.ClearStacks();
+
 			base.EndRun();
 		}
 	}
