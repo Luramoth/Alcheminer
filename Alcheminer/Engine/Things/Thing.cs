@@ -1,16 +1,7 @@
-﻿using Alcheminer.Engine.Services;
-
-namespace Alcheminer.Engine.Things
+﻿namespace Alcheminer.Engine.Things
 {
-    internal abstract class Thing
-    {
-        public Services.IDService.ThingID ID;
-
-		protected Thing(IDService.ThingID iD)
-		{
-			ID = iD;
-		}
-
+    internal abstract class Thing : Element
+	{
 		public Transform Transform { get; set; }
 
         public abstract void Init();

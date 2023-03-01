@@ -1,11 +1,6 @@
-﻿using Alcheminer.Engine.Services;
-
-namespace Alcheminer.Engine.Assets
+﻿namespace Alcheminer.Engine.Assets
 {
-    internal class Asset
+    internal class Asset : Element
     {
-        public IDService.AssetID ID;
-
-		public Asset(IDService.AssetID iD) => ID = iD;
 	}
 }
