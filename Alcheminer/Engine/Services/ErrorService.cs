@@ -9,7 +9,7 @@ namespace Alcheminer.Engine.Services
 			switch (id)
 			{
 				case 0:
-					Debug.Fail("Chaos Engine Error: ID:0 nessesary item unspecified", "there was an item needed for your request but it was not given");
+					Debug.Fail("Chaos Engine Error: ID:0 element not found", "element you were looking for wasent found");
 					break;
 			}
 		}

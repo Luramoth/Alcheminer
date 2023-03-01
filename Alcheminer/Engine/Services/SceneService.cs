@@ -1,5 +1,7 @@
 ﻿using Alcheminer.Engine.Things;
+using System;
 using System.Collections.Generic;
+using static Alcheminer.Engine.Services.IDService;
 
 namespace Alcheminer.Engine.Services
 {
@@ -8,7 +10,20 @@ namespace Alcheminer.Engine.Services
 
 		public class Scene : Element
 		{
-			public List<Thing> Things { get; set; }
+			private List<Thing> things;
+
+			private void TrackThings()
+			{
+				foreach (Thing thing in things)
+				{
+					IDService.Track(thing);
+				}
+			}
+
+			private void UntrackThings()
+			{
+				
+			}
 		}
 	}
 }
