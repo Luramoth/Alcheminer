@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alcheminer", "Alcheminer\Alcheminer.csproj", "{1B1EDD8D-B9CC-417B-BE11-325F3690B6E7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18637C9C-490D-4B2A-BB40-9C02E4E09D5B} = {18637C9C-490D-4B2A-BB40-9C02E4E09D5B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemyEngine", "AlchemyEngine\AlchemyEngine.csproj", "{18637C9C-490D-4B2A-BB40-9C02E4E09D5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B1EDD8D-B9CC-417B-BE11-325F3690B6E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B1EDD8D-B9CC-417B-BE11-325F3690B6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B1EDD8D-B9CC-417B-BE11-325F3690B6E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B1EDD8D-B9CC-417B-BE11-325F3690B6E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18637C9C-490D-4B2A-BB40-9C02E4E09D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18637C9C-490D-4B2A-BB40-9C02E4E09D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18637C9C-490D-4B2A-BB40-9C02E4E09D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18637C9C-490D-4B2A-BB40-9C02E4E09D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
