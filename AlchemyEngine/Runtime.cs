@@ -5,13 +5,19 @@ using log4net.Config;
 namespace AlchemyEngine;
 using System.Reflection;
 
-
+/// <summary>
+/// The alchemy engine itself
+/// </summary>
 public class Runtime
 {
     internal static readonly Assembly AlchemyAssembly = Assembly.GetExecutingAssembly();
     internal static readonly Assembly GameAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException();
     
     internal static readonly ILog Logger = LogManager.GetLogger(typeof(Runtime));
+    
+    /// <summary>
+    /// The function that starts up the Alchemy Engine runtime. Required to run before any use of the engine.
+    /// </summary>
     public static void Init()
     {
         BasicConfigurator.Configure();
@@ -33,6 +39,10 @@ public class Runtime
         Logger.DebugFormat("{0}", WasCalledFromEngineAssembly());
     }
     
+    /// <summary>
+    /// Will check to see if the function being called (whatever function runs this check) is being run by the game or the engine
+    /// </summary>
+    /// <returns>True if last function is being called by AlchemyEngine.dll</returns>
     public static bool WasCalledFromEngineAssembly()
     {
         var stackTrace = new StackTrace();
