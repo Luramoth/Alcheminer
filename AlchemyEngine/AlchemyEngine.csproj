@@ -5,6 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Title>Alchemy Engine</Title>
+        <Description>An experimental ECS game engine</Description>
+        <Copyright>Luramoth</Copyright>
+        <RepositoryUrl>https://github.com/Luramoth/Alcheminer</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>

@@ -41,7 +41,7 @@ public class Runtime
             }
         }
 
-        Logger.Info("Logger Initialised.");
+        Logger.InfoFormat("Alchemy Engine {0} starting for game {1}.",AlchemyAssembly.GetName().Version!.ToString(),GameAssembly!.GetName().Name);
 
         EntityManager = new EntityManager();
         Logger.Info("Entity Manager Initialised");
