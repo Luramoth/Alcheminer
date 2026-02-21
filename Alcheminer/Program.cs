@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AlchemyEngine.Core.Components;
 using AlchemyEngine.Core.Ecs;
 
 namespace Alcheminer;
@@ -19,5 +20,18 @@ class Program
         
         Runtime.EntityManager.Destroy(enemy);
         Console.WriteLine($"is enemy valid? {Runtime.EntityManager.IsAlive(enemy)}");
+
+        enemy = Runtime.EntityManager.Create();
+        
+        Console.WriteLine($"new enemy created {enemy}");
+
+        Chunk<Transform> chunk = new Chunk<Transform>();
+        chunk.AddEntity(player, new Transform{ Position = new(1,2,3) } );
+        chunk.AddEntity(enemy, new Transform{ Position = new(4,5,6) } );
+
+        for (var i = 0; i < chunk.Count; i++)
+        {
+            Console.WriteLine($"Entity {chunk.GetEntity(i)} is in position {chunk.GetComponent(i)}");
+        }
     }
 }
