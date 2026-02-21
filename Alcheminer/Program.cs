@@ -31,7 +31,7 @@ class Program
 
         for (var i = 0; i < chunk.Count; i++)
         {
-            Console.WriteLine($"Entity {chunk.GetEntity(i)} is in position {chunk.GetComponent(i)}");
+            Console.WriteLine($"Entity {chunk.GetEntity(i)} is in position {chunk.GetComponent(i).Position}");
         }
     }
 }
