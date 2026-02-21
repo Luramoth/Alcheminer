@@ -16,6 +16,9 @@ public class Runtime
     
     internal static readonly ILog Logger = LogManager.GetLogger(typeof(Runtime));
 
+    /// <summary>
+    /// Runtime initialised <see cref="EntityManager"/>, refer to <see cref="EntityManager"/> documentation.
+    /// </summary>
     public static EntityManager EntityManager { get; private set; } = null!;
     
     /// <summary>

@@ -1,5 +1,8 @@
 ﻿namespace AlchemyEngine.Core.Ecs;
 
+/// <summary>
+/// Class that handles and stores active <see cref="Entity"/>'s
+/// </summary>
 public class EntityManager
 {
     private long _nextId = 0;
@@ -8,6 +11,10 @@ public class EntityManager
     /// <summary>
     /// Creates an <see cref="Entity"/> and automatically gives it an ID and put that ID into storage sequentially
     /// </summary>
+    /// <remarks>
+    /// IDs are ever-incrementing and never reused.
+    /// will overflow after 9 quintillion entities, though if you ever reach that point something went very wrong
+    /// </remarks>
     /// <returns><see cref="Entity"/> with a unique ID</returns>
     public Entity Create()
     {

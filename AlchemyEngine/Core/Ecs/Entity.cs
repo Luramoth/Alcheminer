@@ -13,11 +13,15 @@ public readonly record struct Entity(long Id) : IEquatable<Entity>
     public bool IsValid => Id >= 0;
     
     /// <summary>
-    /// Will make an invalid entity on porpose, this is meant to be a safer alternative to having a function return null.
+    /// Will make an invalid entity on purpose, this is meant to be a safer alternative to having a function return null.
     /// <returns>Entity with an ID of -1</returns>
     /// <example>return error == false ? new Entity(Id) : Entity.Invalid();</example>
     /// </summary>
     public static Entity Invalid => new(-1);
     
+    /// <summary>
+    /// Turns entity into a string
+    /// </summary>
+    /// <returns>"Entity({Id})"</returns>
     public override string ToString() => $"Entity({Id})";
 }
