@@ -22,7 +22,7 @@ internal static class TypeRegistry
     private static int _nextId = 0;
 
     /// <summary>
-    /// Register a type to turn into a integer
+    /// Register a type to turn into an integer
     /// </summary>
     /// <returns>the id if it's already registered, or the id if it's newly made</returns>
     public static int Register(Type type)
