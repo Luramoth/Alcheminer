@@ -24,7 +24,7 @@
       <PackageReference Include="Arch.System.SourceGenerator" Version="2.1.0" />
       <PackageReference Include="log4net" Version="3.2.0" />
       <PackageReference Include="Optional" Version="4.0.0" />
-      <PackageReference Include="Slangc.NET" Version="2026.2.1" />
+      <PackageReference Include="Slangc.NET" Version="2026.3.1" />
     </ItemGroup>
 
 </Project>
