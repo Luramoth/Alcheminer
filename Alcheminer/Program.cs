@@ -1,8 +1,4 @@
-﻿using System.Reflection;
-using AlchemyEngine.Core.Components;
-using AlchemyEngine.Core.Ecs;
-
-namespace Alcheminer;
+﻿namespace Alcheminer;
 
 using AlchemyEngine;
 
