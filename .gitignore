@@ -6,3 +6,4 @@ riderModule.iml
 TestResults/
 coveragereport/
 Alcheminer.sln.DotSettings.user
+*.alpack

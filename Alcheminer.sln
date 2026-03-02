@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemyEngine", "AlchemyEng
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemyEngine.Tests", "AlchemyEngine.Tests\AlchemyEngine.Tests.csproj", "{2ED6CE39-D07D-49AC-A942-09AE46EFD6BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpacker", "Alpacker\Alpacker.csproj", "{286E1BD0-7D67-478E-9DD0-D52BB3D62114}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpacka", "Alpacka\Alpacka.csproj", "{6C1E3928-368E-4CBF-B889-3B7D050A397A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,5 +31,13 @@ Global
 		{2ED6CE39-D07D-49AC-A942-09AE46EFD6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ED6CE39-D07D-49AC-A942-09AE46EFD6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ED6CE39-D07D-49AC-A942-09AE46EFD6BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{286E1BD0-7D67-478E-9DD0-D52BB3D62114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{286E1BD0-7D67-478E-9DD0-D52BB3D62114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{286E1BD0-7D67-478E-9DD0-D52BB3D62114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{286E1BD0-7D67-478E-9DD0-D52BB3D62114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C1E3928-368E-4CBF-B889-3B7D050A397A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C1E3928-368E-4CBF-B889-3B7D050A397A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C1E3928-368E-4CBF-B889-3B7D050A397A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C1E3928-368E-4CBF-B889-3B7D050A397A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
