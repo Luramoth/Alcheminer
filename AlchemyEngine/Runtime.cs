@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using AlchemyEngine.Core.Ecs;
 using log4net;
 using log4net.Config;
 
@@ -15,11 +14,6 @@ public class Runtime
     internal static readonly Assembly GameAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException();
     
     internal static readonly ILog Logger = LogManager.GetLogger(typeof(Runtime));
-
-    /// <summary>
-    /// Runtime initialised <see cref="EntityManager"/>, refer to <see cref="EntityManager"/> documentation.
-    /// </summary>
-    public static EntityManager EntityManager { get; private set; } = null!;
     
     /// <summary>
     /// The function that starts up the Alchemy Engine runtime. Required to run before any use of the engine.
@@ -42,9 +36,6 @@ public class Runtime
         }
 
         Logger.InfoFormat("Alchemy Engine {0} starting for game {1}.",AlchemyAssembly.GetName().Version!.ToString(),GameAssembly!.GetName().Name);
-
-        EntityManager = new EntityManager();
-        Logger.Info("Entity Manager Initialised");
     }
     
     /// <summary>

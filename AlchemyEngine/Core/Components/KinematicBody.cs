@@ -1,6 +1,4 @@
-﻿using AlchemyEngine.Core.Ecs;
-
-namespace AlchemyEngine.Core.Components;
+﻿namespace AlchemyEngine.Core.Components;
 
 /// <summary>
 /// Base component for all <see cref="Entity"/>'s meant to be moved by physics

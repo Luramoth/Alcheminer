@@ -1,6 +1,4 @@
-﻿using AlchemyEngine.Core.Ecs;
-
-namespace AlchemyEngine.Core.Components;
+﻿namespace AlchemyEngine.Core.Components;
 
 /// <summary>
 /// The core Component for all physics, does not on its own have any systems that use it, but all physics systems require it.
