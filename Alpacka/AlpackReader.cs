@@ -28,7 +28,7 @@ public class AlpackReader : IDisposable
             Magic = _reader.ReadUInt32(),
             Version = _reader.ReadUInt32(),
             EntryCount = _reader.ReadUInt32(),
-            DataOffset = +_reader.ReadUInt32(),
+            DataOffset = _reader.ReadUInt32(),
             IndexOffset = _reader.ReadUInt32(),
             Reserved = _reader.ReadUInt32()
         };
@@ -80,7 +80,7 @@ public class AlpackReader : IDisposable
         if (!_index.TryGetValue(hash, out var entry))
             throw new FileNotFoundException($"File not found in archive: {path}");
 
-        _stream.Position = _header.DataOffset + entry.DataOffset;
+        _stream.Position = entry.DataOffset;
         return _reader.ReadBytes((int)entry.Size);
     }
 
