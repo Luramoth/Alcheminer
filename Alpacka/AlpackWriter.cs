@@ -83,8 +83,6 @@ public class AlpackWriter : IDisposable
             _dataOffset += (uint)file.Data.Length;
         }
         
-        var dataSectionEnd = (uint)_stream.Position;
-        
         // Write string table
         var stringTableOffset = (uint)_stream.Position;
         var stringOffsets = new Dictionary<string, uint>();
@@ -119,6 +117,7 @@ public class AlpackWriter : IDisposable
             Version = AlpackFormat.Version,
             EntryCount = (uint)_entries.Count,
             DataOffset = 24,
+            StringTableOffset = stringTableOffset,
             IndexOffset = indexOffset
         };
         
@@ -126,6 +125,7 @@ public class AlpackWriter : IDisposable
         _writer.Write(header.Version);
         _writer.Write(header.EntryCount);
         _writer.Write(header.DataOffset);
+        _writer.Write(header.StringTableOffset);
         _writer.Write(header.IndexOffset);
         _writer.Write(header.Reserved);
     }

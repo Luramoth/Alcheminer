@@ -13,9 +13,10 @@ public static class AlpackFormat
         public uint Magic;
         public uint Version;
         public uint EntryCount;
-        public uint DataOffset; // Where file data starts
-        public uint IndexOffset;// Where index starts
-        public uint Reserved;   // Padding
+        public uint DataOffset;         // Where file data starts
+        public uint StringTableOffset;  // Where String Table starts
+        public uint IndexOffset;        // Where index starts
+        public uint Reserved;           // Padding
     }
     
     /// <summary>

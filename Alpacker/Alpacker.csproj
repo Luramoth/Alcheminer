@@ -23,4 +23,8 @@
       <ProjectReference Include="..\Alpacka\Alpacka.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Output\" />
+    </ItemGroup>
+
 </Project>

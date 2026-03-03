@@ -11,7 +11,6 @@ public class AlpackReader : IDisposable
     private readonly BinaryReader _reader;
     private readonly AlpackFormat.Header _header;
     private readonly Dictionary<ulong, AlpackFormat.Entry> _index = new();
-    private readonly long _stringTableOffset;
     
     public string FilePath { get; }
     public int EntryCount => (int)_header.EntryCount;
@@ -29,6 +28,7 @@ public class AlpackReader : IDisposable
             Version = _reader.ReadUInt32(),
             EntryCount = _reader.ReadUInt32(),
             DataOffset = _reader.ReadUInt32(),
+            StringTableOffset = _reader.ReadUInt32(),
             IndexOffset = _reader.ReadUInt32(),
             Reserved = _reader.ReadUInt32()
         };
@@ -52,8 +52,6 @@ public class AlpackReader : IDisposable
             };
             _index[entry.PathHash] = entry;
         }
-
-        _stringTableOffset = _header.IndexOffset + (_header.EntryCount * 24);
     }
 
     /// <summary>
@@ -94,7 +92,7 @@ public class AlpackReader : IDisposable
         if (!_index.TryGetValue(hash, out var entry))
             return null;
 
-        _stream.Position = _stringTableOffset + entry.NameOffset;
+        _stream.Position = _header.StringTableOffset + entry.NameOffset;
         var bytes = new List<byte>();
 
         byte b;
