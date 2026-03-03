@@ -3,6 +3,7 @@ struct header {
     u32 Version;
     u32 EntryCount;
     u32 DataOffset;
+    u32 StringTableOffset;
     u32 IndexOffset;
     u32 Reserved [[color("f9f9f9")]];
 };
@@ -16,7 +17,7 @@ struct entry {
     
     u8 data[Size] @ DataOffset;
     
-    char name[] @ NameOffset;
+    char name[] @ parent.Header.StringTableOffset + NameOffset;
 };
 
 struct alpack {

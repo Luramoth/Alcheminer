@@ -1,4 +1,6 @@
-﻿namespace Alpacka;
+﻿using System.Runtime.CompilerServices;
+
+namespace Alpacka;
 
 public static class AlpackFormat
 {
@@ -6,7 +8,7 @@ public static class AlpackFormat
     public const uint Version = 1;
 
     /// <summary>
-    /// 24-byte header at the start of the file
+    /// header at the start of the file
     /// </summary>
     public struct Header
     {

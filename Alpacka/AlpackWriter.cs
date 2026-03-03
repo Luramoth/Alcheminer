@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Alpacka;
 
@@ -25,8 +26,9 @@ public class AlpackWriter : IDisposable
         _writer = new BinaryWriter(_stream, Encoding.UTF8);
         
         // Reserve header space
-        _writer.Write(new byte[24]);
-        _dataOffset = 24;
+        int headerSize = Unsafe.SizeOf<AlpackFormat.Header>();
+        _writer.Write(new byte[headerSize]);
+        _dataOffset = (uint)headerSize;
     }
 
     /// <summary>
@@ -116,7 +118,7 @@ public class AlpackWriter : IDisposable
             Magic = AlpackFormat.Magic,
             Version = AlpackFormat.Version,
             EntryCount = (uint)_entries.Count,
-            DataOffset = 24,
+            DataOffset = (uint)Unsafe.SizeOf<AlpackFormat.Header>(),
             StringTableOffset = stringTableOffset,
             IndexOffset = indexOffset
         };
