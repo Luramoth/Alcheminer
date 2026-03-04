@@ -7,3 +7,4 @@ TestResults/
 coveragereport/
 Alcheminer.sln.DotSettings.user
 *.alpack
+Output/

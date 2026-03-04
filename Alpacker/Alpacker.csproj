@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Assets\Shaders\Fakeshader.slang" />
       <EmbeddedResource Include="log4net.config" />
     </ItemGroup>
 
