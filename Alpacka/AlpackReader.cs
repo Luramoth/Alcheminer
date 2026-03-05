@@ -48,7 +48,9 @@ public class AlpackReader : IDisposable
                 PathHash = _reader.ReadUInt64(),
                 DataOffset = _reader.ReadUInt32(),
                 OriginalSize = _reader.ReadUInt32(),
+                CompressedSize = _reader.ReadUInt32(),
                 NameOffset = _reader.ReadUInt32(),
+                CompressionType = _reader.ReadUInt16(),
                 Reserved = _reader.ReadUInt32()
             };
             _index[entry.PathHash] = entry;
@@ -93,8 +95,7 @@ public class AlpackReader : IDisposable
     private static byte[] Decompress(byte[] compressed, uint originalSize)
     {
         using var decompressor = new Decompressor();
-        var result = decompressor.Unwrap(compressed);
-        return result.ToArray();
+        return decompressor.Unwrap(compressed, (int)originalSize).ToArray();
     }
 
     /// <summary>
