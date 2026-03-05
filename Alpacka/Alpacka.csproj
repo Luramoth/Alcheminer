@@ -4,10 +4,15 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Title>Alpacka</Title>
         <Authors>Luramoth</Authors>
         <Description>a flexible semi-vfs packaging format</Description>
         <Copyright>Luramoth</Copyright>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ZstdSharp.Port" Version="0.8.7" />
+    </ItemGroup>
 
 </Project>

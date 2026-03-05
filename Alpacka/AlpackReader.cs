@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ZstdSharp;
 
 namespace Alpacka;
 
@@ -46,7 +47,7 @@ public class AlpackReader : IDisposable
             {
                 PathHash = _reader.ReadUInt64(),
                 DataOffset = _reader.ReadUInt32(),
-                Size = _reader.ReadUInt32(),
+                OriginalSize = _reader.ReadUInt32(),
                 NameOffset = _reader.ReadUInt32(),
                 Reserved = _reader.ReadUInt32()
             };
@@ -79,7 +80,21 @@ public class AlpackReader : IDisposable
             throw new FileNotFoundException($"File not found in archive: {path}");
 
         _stream.Position = entry.DataOffset;
-        return _reader.ReadBytes((int)entry.Size);
+        var compressed = _reader.ReadBytes((int)entry.CompressedSize);
+
+        return entry.CompressionType switch
+        {
+            (ushort)AlpackFormat.CompressionType.None => compressed,
+            (ushort)AlpackFormat.CompressionType.Zstd => Decompress(compressed, entry.OriginalSize),
+            _ => throw new NotSupportedException($"Compression type: {entry.CompressionType}")
+        };
+    }
+
+    private static byte[] Decompress(byte[] compressed, uint originalSize)
+    {
+        using var decompressor = new Decompressor();
+        var result = decompressor.Unwrap(compressed);
+        return result.ToArray();
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
+using ZstdSharp;
 
 namespace Alpacka;
 
@@ -58,6 +59,22 @@ public class AlpackWriter : IDisposable
         AddFile(relativePath, File.ReadAllBytes(sourcePath));
     }
 
+    private static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input, int level = 3)
+    {
+        // only use compression
+        if (input.Length < 1024)
+            return (input, AlpackFormat.CompressionType.None);
+
+        using var compressor = new Compressor(level);
+        var compressed = compressor.Wrap(input).ToArray();
+
+        // only use compression if it actually helped at all
+        if (compressed.Length < input.Length * 0.9)
+            return (compressed, AlpackFormat.CompressionType.Zstd);
+
+        return (input, AlpackFormat.CompressionType.None);
+    }
+
     /// <summary>
     /// Write the file out
     /// </summary>
@@ -72,17 +89,21 @@ public class AlpackWriter : IDisposable
         // For each file added, write its data to the archive
         foreach (var file in _entries)
         {
+            var(compressed, compressionType) = Compress(file.Data);
+            
             var entry = new AlpackFormat.Entry
             {
                 PathHash = AlpackFormat.HashPath(file.RelativePath),
                 DataOffset = _dataOffset,
-                Size = (uint)file.Data.Length,
+                CompressedSize = (uint)compressed.Length,
+                OriginalSize = (uint)file.Data.Length,
+                CompressionType = (ushort)compressionType,
                 NameOffset = 0
             };
             
             entryInfos.Add((entry, file.RelativePath));
-            _writer.Write(file.Data);
-            _dataOffset += (uint)file.Data.Length;
+            _writer.Write(compressed);
+            _dataOffset += (uint)compressed.Length;
         }
         
         // Write string table
@@ -105,8 +126,10 @@ public class AlpackWriter : IDisposable
             
             _writer.Write(finalEntry.PathHash);
             _writer.Write(finalEntry.DataOffset);
-            _writer.Write(finalEntry.Size);
+            _writer.Write(finalEntry.CompressedSize);
+            _writer.Write(finalEntry.OriginalSize);
             _writer.Write(finalEntry.NameOffset);
+            _writer.Write(finalEntry.CompressionType);
             _writer.Write(finalEntry.Reserved);
         }
         
