@@ -1,9 +1,12 @@
 ﻿namespace Alpacka;
 
+/// <summary>
+/// the overall template of the Alpack file format
+/// </summary>
 public static class AlpackFormat
 {
     /// <summary>
-    /// Magic number constant that will be foudn at the beginning of any .alpack file. 'ALPK'
+    /// Magic number constant that will be found at the beginning of any .alpack file. 'ALPK'
     /// </summary>
     public const uint Magic = 0x4B504C41;   // 'ALPK' 
     /// <summary>
@@ -18,11 +21,11 @@ public static class AlpackFormat
     {
         /// <summary> No Compression </summary>
         None = 0,
-        /// <summary> ZStandard compression </summary>
+        /// <summary> ZStandard compression (compromise between speed and compression ratio)</summary>
         Zstd = 1,
-        /// <summary> Deflate compression </summary>
+        /// <summary> Deflate compression (slowest speed, max compression)</summary>
         Deflate = 2,
-        /// <summary> LZ4 compression </summary>
+        /// <summary> LZ4 compression (fastest speed, worst compression)</summary>
         Lz4 = 3,
     }
 
@@ -31,13 +34,20 @@ public static class AlpackFormat
     /// </summary>
     public struct Header
     {
+        /// <summary> Number that identifies an Alpacka file 'ALPK' </summary>
         public uint Magic;
+        /// <summary> Version of the format </summary>
         public uint Version;
+        /// <summary> Amount of files stored in the archive </summary>
         public uint EntryCount;
-        public uint DataOffset;         // Where file data starts
-        public uint StringTableOffset;  // Where String Table starts
-        public uint IndexOffset;        // Where index starts
-        public uint Reserved;           // Padding
+        /// <summary> Location in which the file data begins within the archive </summary>
+        public uint DataOffset;
+        /// <summary> Where file string table is stored to store the file paths </summary>
+        public uint StringTableOffset;
+        /// <summary> The beginning of the file index where file archive metadata is stored </summary>
+        public uint IndexOffset;
+        /// <summary> Padding </summary>
+        public uint Reserved;
     }
     
     /// <summary>
@@ -45,13 +55,20 @@ public static class AlpackFormat
     /// </summary>
     public struct Entry
     {
-        public ulong PathHash;              // FNV-1a hash
-        public uint DataOffset;             // Offset in data section
-        public uint CompressedSize;         // File size (Compressed)
-        public uint OriginalSize;           // File size
-        public ushort CompressionType;      // CompressionType Enum
-        public uint NameOffset;             // Offset in string table
-        public uint Reserved;               // Padding
+        /// <summary> the file path made into a has using FNV-1a </summary>
+        public ulong PathHash;
+        /// <summary> offset to the data inside the data section </summary>
+        public uint DataOffset;
+        /// <summary> size of the file when compressed </summary>
+        public uint CompressedSize;
+        /// <summary> the original size of the file before compression </summary>
+        public uint OriginalSize;
+        /// <summary> type of compression used on file (refer to <see cref="CompressionType"/>) </summary>
+        public ushort CompressionType;
+        /// <summary> offset of the file's name inside the string table </summary>
+        public uint NameOffset;
+        /// <summary> padding </summary>
+        public uint Reserved;
     }
 
     /// <summary>

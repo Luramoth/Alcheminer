@@ -14,9 +14,21 @@ public class AlpackReader : IDisposable
     private readonly AlpackFormat.Header _header;
     private readonly Dictionary<ulong, AlpackFormat.Entry> _index = new();
     
+    /// <summary>
+    /// Path to the .alpack file
+    /// </summary>
     public string FilePath { get; }
+    /// <summary>
+    /// Number of files in the archive
+    /// </summary>
     public int EntryCount => (int)_header.EntryCount;
     
+    /// <summary>
+    /// creates a new AlpackReader for the .alpack archive
+    /// </summary>
+    /// <param name="path">Path to the .alpack file</param>
+    /// <exception cref="InvalidDataException">Thrown if the .alpack file is not a valid .alpack file</exception>
+    /// <exception cref="NotSupportedException">Thrown if the version is too old or new</exception>
     public AlpackReader(string path)
     {
         FilePath = path;
@@ -89,7 +101,7 @@ public class AlpackReader : IDisposable
         {
             (ushort)AlpackFormat.CompressionType.None => compressed,
             (ushort)AlpackFormat.CompressionType.Deflate => DeflateDecompress(compressed, entry.OriginalSize),
-            (ushort)AlpackFormat.CompressionType.Lz4 => LZ4Decompress(compressed, entry.OriginalSize),
+            (ushort)AlpackFormat.CompressionType.Lz4 => Lz4Decompress(compressed, entry.OriginalSize),
             _ => throw new NotSupportedException($"Compression type: {entry.CompressionType}")
         };
     }
@@ -104,7 +116,7 @@ public class AlpackReader : IDisposable
         return output.ToArray();
     }
 
-    private static byte[] LZ4Decompress(byte[] compressed, uint originalSize)
+    private static byte[] Lz4Decompress(byte[] compressed, uint originalSize)
     {
         var result = new byte[originalSize];
 
@@ -138,6 +150,10 @@ public class AlpackReader : IDisposable
         return Encoding.UTF8.GetString(bytes.ToArray());
     }
 
+    /// <summary>
+    /// Gives you a list of all the files in the archive
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<string> ListFiles()
     {
         foreach (var entry in _index.Values)
@@ -146,6 +162,9 @@ public class AlpackReader : IDisposable
         }
     }
     
+    /// <summary>
+    /// Releases all resources from the AlpackReader class
+    /// </summary>
     public void Dispose()
     {
         _reader.Dispose();

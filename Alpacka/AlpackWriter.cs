@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using K4os.Compression.LZ4;
+using ZstdNet;
 
 namespace Alpacka;
 
@@ -22,6 +23,10 @@ public class AlpackWriter : IDisposable
         public required byte[] Data { get; init; }
     }
 
+    /// <summary>
+    /// creates a AlpackWriter for the file specified
+    /// </summary>
+    /// <param name="outputPath"></param>
     public AlpackWriter(string outputPath)
     {
         _stream = File.Create(outputPath);
@@ -184,6 +189,9 @@ public class AlpackWriter : IDisposable
         _writer.Write(header.Reserved);
     }
 
+    /// <summary>
+    /// Releases all resources from the AlpackWriter class
+    /// </summary>
     public void Dispose()
     {
         Finalise();
