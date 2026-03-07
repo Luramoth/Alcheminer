@@ -65,7 +65,7 @@ public class AlpackWriter : IDisposable
         AddFile(relativePath, File.ReadAllBytes(sourcePath));
     }
 
-    private static (byte[] data, AlpackFormat.CompressionType) DeflateCompress(byte[] input, int level = 3)
+    private static (byte[] data, AlpackFormat.CompressionType) DeflateCompress(byte[] input)
     {
         // only use compression if beneficial
         if (input.Length < 1024)
@@ -108,6 +108,21 @@ public class AlpackWriter : IDisposable
 
         return (input, AlpackFormat.CompressionType.None);
     }
+    
+    private static (byte[] data, AlpackFormat.CompressionType) ZstdCompress(byte[] input)
+    {
+        // only use compression if beneficial
+        if (input.Length < 1024)
+            return (input, AlpackFormat.CompressionType.None);
+        
+        using var compressor = new Compressor();
+        var compressed = compressor.Wrap(input);
+        
+        if (compressed.Length < input.Length * 0.9)
+            return (compressed, AlpackFormat.CompressionType.Zstd);
+
+        return (input, AlpackFormat.CompressionType.None);
+    }
 
     /// <summary>
     /// Write the file out
@@ -123,7 +138,7 @@ public class AlpackWriter : IDisposable
         // For each file added, write its data to the archive
         foreach (var file in _entries)
         {
-            var(compressed, compressionType) = Lz4Compress(file.Data);
+            var(compressed, compressionType) = ZstdCompress(file.Data);
             
             var entry = new AlpackFormat.Entry
             {

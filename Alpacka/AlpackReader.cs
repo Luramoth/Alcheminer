@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Text;
 using K4os.Compression.LZ4;
+using ZstdNet;
 
 namespace Alpacka;
 
@@ -100,6 +101,7 @@ public class AlpackReader : IDisposable
         return entry.CompressionType switch
         {
             (ushort)AlpackFormat.CompressionType.None => compressed,
+            (ushort)AlpackFormat.CompressionType.Zstd => ZstdDecompress(compressed, entry.OriginalSize),
             (ushort)AlpackFormat.CompressionType.Deflate => DeflateDecompress(compressed, entry.OriginalSize),
             (ushort)AlpackFormat.CompressionType.Lz4 => Lz4Decompress(compressed, entry.OriginalSize),
             _ => throw new NotSupportedException($"Compression type: {entry.CompressionType}")
@@ -126,6 +128,14 @@ public class AlpackReader : IDisposable
 
         if (decoded != originalSize)
             throw new InvalidOperationException($"Size mismatch");
+
+        return result;
+    }
+
+    private static byte[] ZstdDecompress(byte[] compressed, uint originalSize)
+    {
+        using var decompressor = new Decompressor();
+        var result = decompressor.Unwrap(compressed, (int)originalSize);
 
         return result;
     }
