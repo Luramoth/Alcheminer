@@ -16,14 +16,14 @@ public static class AlpackFormat
     /// </summary>
     public enum CompressionType : ushort
     {
-        /// <summary>
-        /// No Compression
-        /// </summary>
+        /// <summary> No Compression </summary>
         None = 0,
-        /// <summary>
-        /// ZStandard compression
-        /// </summary>
+        /// <summary> ZStandard compression </summary>
         Zstd = 1,
+        /// <summary> Deflate compression </summary>
+        Deflate = 2,
+        /// <summary> LZ4 compression </summary>
+        Lz4 = 3,
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO.Compression;
+using System.Text;
 using ZstdSharp;
 
 namespace Alpacka;
@@ -49,8 +50,8 @@ public class AlpackReader : IDisposable
                 DataOffset = _reader.ReadUInt32(),
                 OriginalSize = _reader.ReadUInt32(),
                 CompressedSize = _reader.ReadUInt32(),
-                NameOffset = _reader.ReadUInt32(),
                 CompressionType = _reader.ReadUInt16(),
+                NameOffset = _reader.ReadUInt32(),
                 Reserved = _reader.ReadUInt32()
             };
             _index[entry.PathHash] = entry;
@@ -87,15 +88,22 @@ public class AlpackReader : IDisposable
         return entry.CompressionType switch
         {
             (ushort)AlpackFormat.CompressionType.None => compressed,
-            (ushort)AlpackFormat.CompressionType.Zstd => Decompress(compressed, entry.OriginalSize),
+            (ushort)AlpackFormat.CompressionType.Deflate => DeflateDecompress(compressed, entry.OriginalSize),
             _ => throw new NotSupportedException($"Compression type: {entry.CompressionType}")
         };
     }
 
-    private static byte[] Decompress(byte[] compressed, uint originalSize)
+    private static byte[] DeflateDecompress(byte[] compressed, uint originalSize)
     {
-        using var decompressor = new Decompressor();
-        return decompressor.Unwrap(compressed, (int)originalSize).ToArray();
+        /*using var decompressor = new Decompressor();
+        return decompressor.Unwrap(compressed, (int)originalSize).ToArray();*/
+
+        using var input = new MemoryStream(compressed);
+        using var deflate = new DeflateStream(input, CompressionMode.Decompress);
+        using var output = new MemoryStream((int)originalSize);
+        
+        deflate.CopyTo(output);
+        return output.ToArray();
     }
 
     /// <summary>

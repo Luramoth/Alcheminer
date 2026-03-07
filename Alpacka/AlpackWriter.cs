@@ -1,6 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Text;
+using K4os.Compression.LZ4;
 using ZstdSharp;
+using ZstdSharp.Unsafe;
 
 namespace Alpacka;
 
@@ -59,18 +62,31 @@ public class AlpackWriter : IDisposable
         AddFile(relativePath, File.ReadAllBytes(sourcePath));
     }
 
-    private static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input, int level = 3)
+    private static (byte[] data, AlpackFormat.CompressionType) DeflateCompress(byte[] input, int level = 3)
     {
         // only use compression
         if (input.Length < 1024)
             return (input, AlpackFormat.CompressionType.None);
 
-        using var compressor = new Compressor(level);
-        var compressed = compressor.Wrap(input).ToArray();
+        #region Compression happening
+
+        /*using var compressor = new Compressor(level);
+        
+        byte[] compressed = compressor.Wrap(input).ToArray();*/
+
+        using var output = new MemoryStream();
+        using (var deflate = new DeflateStream(output, CompressionLevel.Optimal))
+        {
+            deflate.Write(input, 0, input.Length);
+        }
+
+        var compressed = output.ToArray();
+
+        #endregion
 
         // only use compression if it actually helped at all
         if (compressed.Length < input.Length * 0.9)
-            return (compressed, AlpackFormat.CompressionType.Zstd);
+            return (compressed, AlpackFormat.CompressionType.Deflate);
 
         return (input, AlpackFormat.CompressionType.None);
     }
@@ -89,7 +105,7 @@ public class AlpackWriter : IDisposable
         // For each file added, write its data to the archive
         foreach (var file in _entries)
         {
-            var(compressed, compressionType) = Compress(file.Data);
+            var(compressed, compressionType) = DeflateCompress(file.Data);
             
             var entry = new AlpackFormat.Entry
             {
@@ -128,8 +144,8 @@ public class AlpackWriter : IDisposable
             _writer.Write(finalEntry.DataOffset);
             _writer.Write(finalEntry.CompressedSize);
             _writer.Write(finalEntry.OriginalSize);
-            _writer.Write(finalEntry.NameOffset);
             _writer.Write(finalEntry.CompressionType);
+            _writer.Write(finalEntry.NameOffset);
             _writer.Write(finalEntry.Reserved);
         }
         
