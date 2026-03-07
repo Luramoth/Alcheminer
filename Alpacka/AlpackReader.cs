@@ -1,7 +1,6 @@
-﻿using System.IO.Compression;
-using System.Text;
-using K4os.Compression.LZ4;
-using ZstdNet;
+﻿using System.Text;
+
+using Alpacka.Compression;
 
 namespace Alpacka;
 
@@ -101,43 +100,11 @@ public class AlpackReader : IDisposable
         return entry.CompressionType switch
         {
             (ushort)AlpackFormat.CompressionType.None => compressed,
-            (ushort)AlpackFormat.CompressionType.Zstd => ZstdDecompress(compressed, entry.OriginalSize),
-            (ushort)AlpackFormat.CompressionType.Deflate => DeflateDecompress(compressed, entry.OriginalSize),
-            (ushort)AlpackFormat.CompressionType.Lz4 => Lz4Decompress(compressed, entry.OriginalSize),
+            (ushort)AlpackFormat.CompressionType.Zstd => Zstd.Decompress(compressed, entry.OriginalSize),
+            (ushort)AlpackFormat.CompressionType.Deflate => Deflate.Decompress(compressed, entry.OriginalSize),
+            (ushort)AlpackFormat.CompressionType.Lz4 => LZ4.Decompress(compressed, entry.OriginalSize),
             _ => throw new NotSupportedException($"Compression type: {entry.CompressionType}")
         };
-    }
-
-    private static byte[] DeflateDecompress(byte[] compressed, uint originalSize)
-    {
-        using var input = new MemoryStream(compressed);
-        using var deflate = new DeflateStream(input, CompressionMode.Decompress);
-        using var output = new MemoryStream((int)originalSize);
-        
-        deflate.CopyTo(output);
-        return output.ToArray();
-    }
-
-    private static byte[] Lz4Decompress(byte[] compressed, uint originalSize)
-    {
-        var result = new byte[originalSize];
-
-        int decoded = LZ4Codec.Decode(
-            compressed, 0, compressed.Length,
-            result, 0, result.Length);
-
-        if (decoded != originalSize)
-            throw new InvalidOperationException($"Size mismatch");
-
-        return result;
-    }
-
-    private static byte[] ZstdDecompress(byte[] compressed, uint originalSize)
-    {
-        using var decompressor = new Decompressor();
-        var result = decompressor.Unwrap(compressed, (int)originalSize);
-
-        return result;
     }
 
     /// <summary>

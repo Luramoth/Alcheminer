@@ -1,8 +1,7 @@
-﻿using System.IO.Compression;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Text;
-using K4os.Compression.LZ4;
-using ZstdNet;
+
+using Alpacka.Compression;
 
 namespace Alpacka;
 
@@ -65,65 +64,6 @@ public class AlpackWriter : IDisposable
         AddFile(relativePath, File.ReadAllBytes(sourcePath));
     }
 
-    private static (byte[] data, AlpackFormat.CompressionType) DeflateCompress(byte[] input)
-    {
-        // only use compression if beneficial
-        if (input.Length < 1024)
-            return (input, AlpackFormat.CompressionType.None);
-
-        using var output = new MemoryStream();
-        using (var deflate = new DeflateStream(output, CompressionLevel.Optimal))
-        {
-            deflate.Write(input, 0, input.Length);
-        }
-
-        var compressed = output.ToArray();
-
-        // only use compression if it actually helped at all
-        if (compressed.Length < input.Length * 0.9)
-            return (compressed, AlpackFormat.CompressionType.Deflate);
-
-        return (input, AlpackFormat.CompressionType.None);
-    }
-
-    private static (byte[] data, AlpackFormat.CompressionType) Lz4Compress(byte[] input)
-    {
-        // only use compression if beneficial
-        if (input.Length < 1024)
-            return (input, AlpackFormat.CompressionType.None);
-
-        int maxCompressedSize = LZ4Codec.MaximumOutputSize(input.Length);
-        var compressed = new byte[maxCompressedSize];
-
-        int compressedSize = LZ4Codec.Encode(
-            input, 0, input.Length,
-            compressed, 0, compressed.Length,
-            LZ4Level.L12_MAX);
-        
-        if (compressedSize < compressed.Length)
-            Array.Resize(ref compressed, compressedSize);
-
-        if (compressed.Length < input.Length * 0.9)
-            return (compressed, AlpackFormat.CompressionType.Lz4);
-
-        return (input, AlpackFormat.CompressionType.None);
-    }
-    
-    private static (byte[] data, AlpackFormat.CompressionType) ZstdCompress(byte[] input)
-    {
-        // only use compression if beneficial
-        if (input.Length < 1024)
-            return (input, AlpackFormat.CompressionType.None);
-        
-        using var compressor = new Compressor();
-        var compressed = compressor.Wrap(input);
-        
-        if (compressed.Length < input.Length * 0.9)
-            return (compressed, AlpackFormat.CompressionType.Zstd);
-
-        return (input, AlpackFormat.CompressionType.None);
-    }
-
     /// <summary>
     /// Write the file out
     /// </summary>
@@ -138,7 +78,7 @@ public class AlpackWriter : IDisposable
         // For each file added, write its data to the archive
         foreach (var file in _entries)
         {
-            var(compressed, compressionType) = ZstdCompress(file.Data);
+            var(compressed, compressionType) = Zstd.Compress(file.Data);
             
             var entry = new AlpackFormat.Entry
             {
