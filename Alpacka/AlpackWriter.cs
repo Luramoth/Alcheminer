@@ -2,8 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using K4os.Compression.LZ4;
-using ZstdSharp;
-using ZstdSharp.Unsafe;
 
 namespace Alpacka;
 
@@ -64,15 +62,9 @@ public class AlpackWriter : IDisposable
 
     private static (byte[] data, AlpackFormat.CompressionType) DeflateCompress(byte[] input, int level = 3)
     {
-        // only use compression
+        // only use compression if beneficial
         if (input.Length < 1024)
             return (input, AlpackFormat.CompressionType.None);
-
-        #region Compression happening
-
-        /*using var compressor = new Compressor(level);
-        
-        byte[] compressed = compressor.Wrap(input).ToArray();*/
 
         using var output = new MemoryStream();
         using (var deflate = new DeflateStream(output, CompressionLevel.Optimal))
@@ -82,11 +74,32 @@ public class AlpackWriter : IDisposable
 
         var compressed = output.ToArray();
 
-        #endregion
-
         // only use compression if it actually helped at all
         if (compressed.Length < input.Length * 0.9)
             return (compressed, AlpackFormat.CompressionType.Deflate);
+
+        return (input, AlpackFormat.CompressionType.None);
+    }
+
+    private static (byte[] data, AlpackFormat.CompressionType) Lz4Compress(byte[] input)
+    {
+        // only use compression if beneficial
+        if (input.Length < 1024)
+            return (input, AlpackFormat.CompressionType.None);
+
+        int maxCompressedSize = LZ4Codec.MaximumOutputSize(input.Length);
+        var compressed = new byte[maxCompressedSize];
+
+        int compressedSize = LZ4Codec.Encode(
+            input, 0, input.Length,
+            compressed, 0, compressed.Length,
+            LZ4Level.L12_MAX);
+        
+        if (compressedSize < compressed.Length)
+            Array.Resize(ref compressed, compressedSize);
+
+        if (compressed.Length < input.Length * 0.9)
+            return (compressed, AlpackFormat.CompressionType.Lz4);
 
         return (input, AlpackFormat.CompressionType.None);
     }
@@ -105,7 +118,7 @@ public class AlpackWriter : IDisposable
         // For each file added, write its data to the archive
         foreach (var file in _entries)
         {
-            var(compressed, compressionType) = DeflateCompress(file.Data);
+            var(compressed, compressionType) = Lz4Compress(file.Data);
             
             var entry = new AlpackFormat.Entry
             {

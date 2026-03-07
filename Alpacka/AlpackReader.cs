@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Text;
-using ZstdSharp;
+using K4os.Compression.LZ4;
 
 namespace Alpacka;
 
@@ -48,8 +48,8 @@ public class AlpackReader : IDisposable
             {
                 PathHash = _reader.ReadUInt64(),
                 DataOffset = _reader.ReadUInt32(),
-                OriginalSize = _reader.ReadUInt32(),
                 CompressedSize = _reader.ReadUInt32(),
+                OriginalSize = _reader.ReadUInt32(),
                 CompressionType = _reader.ReadUInt16(),
                 NameOffset = _reader.ReadUInt32(),
                 Reserved = _reader.ReadUInt32()
@@ -89,21 +89,33 @@ public class AlpackReader : IDisposable
         {
             (ushort)AlpackFormat.CompressionType.None => compressed,
             (ushort)AlpackFormat.CompressionType.Deflate => DeflateDecompress(compressed, entry.OriginalSize),
+            (ushort)AlpackFormat.CompressionType.Lz4 => LZ4Decompress(compressed, entry.OriginalSize),
             _ => throw new NotSupportedException($"Compression type: {entry.CompressionType}")
         };
     }
 
     private static byte[] DeflateDecompress(byte[] compressed, uint originalSize)
     {
-        /*using var decompressor = new Decompressor();
-        return decompressor.Unwrap(compressed, (int)originalSize).ToArray();*/
-
         using var input = new MemoryStream(compressed);
         using var deflate = new DeflateStream(input, CompressionMode.Decompress);
         using var output = new MemoryStream((int)originalSize);
         
         deflate.CopyTo(output);
         return output.ToArray();
+    }
+
+    private static byte[] LZ4Decompress(byte[] compressed, uint originalSize)
+    {
+        var result = new byte[originalSize];
+
+        int decoded = LZ4Codec.Decode(
+            compressed, 0, compressed.Length,
+            result, 0, result.Length);
+
+        if (decoded != originalSize)
+            throw new InvalidOperationException($"Size mismatch");
+
+        return result;
     }
 
     /// <summary>
