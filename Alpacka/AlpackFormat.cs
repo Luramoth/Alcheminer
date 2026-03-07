@@ -51,7 +51,7 @@ public static class AlpackFormat
     }
     
     /// <summary>
-    /// 24-byte index entry per file
+    /// metadata entry per file
     /// </summary>
     public struct Entry
     {

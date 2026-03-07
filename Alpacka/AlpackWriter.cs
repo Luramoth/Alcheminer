@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
-
+using System.Text.RegularExpressions;
 using Alpacka.Compression;
 
 namespace Alpacka;
@@ -20,6 +20,7 @@ public class AlpackWriter : IDisposable
     {
         public required string RelativePath { get; init; }
         public required byte[] Data { get; init; }
+        public required MetaFile MetaFile { get; init; }
     }
 
     /// <summary>
@@ -43,14 +44,15 @@ public class AlpackWriter : IDisposable
     /// <param name="relativePath">File path inside pack</param>
     /// <param name="data">File data</param>
     /// <exception cref="InvalidOperationException">Thrown if file is already finished and finalized</exception>
-    public void AddFile(string relativePath, byte[] data)
+    public void AddFile(string relativePath, byte[] data, MetaFile metaFile)
     {
         if (_finalised) throw new InvalidOperationException("Already Finalised");
 
         _entries.Add(new FileEntry
         {
             RelativePath = relativePath.ToLowerInvariant().Replace('\\', '/'),
-            Data = data
+            Data = data,
+            MetaFile = metaFile,
         });
     }
 
@@ -61,7 +63,8 @@ public class AlpackWriter : IDisposable
     /// <param name="sourcePath">File path from the disk to the file</param>
     public void AddFileFromDisk(string relativePath, string sourcePath)
     {
-        AddFile(relativePath, File.ReadAllBytes(sourcePath));
+        if (!sourcePath.EndsWith(".meta.toml"))
+            AddFile(relativePath, File.ReadAllBytes(sourcePath), MetaFile.LoadOrDefault($"{sourcePath}.meta.toml"));
     }
 
     /// <summary>
