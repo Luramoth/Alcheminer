@@ -79,13 +79,12 @@ class Program
         {
             var relativePath = Path.GetRelativePath(inputDir, file).Replace('\\', '/');
             
-            writer.AddFileFromDisk(relativePath, file);
-            Logger.Info($"  + {relativePath}");
+            if (writer.AddFileFromDisk(relativePath, file))
+                Logger.Info($"  + {relativePath}");
         }
         
         writer.Finalise();
         Logger.Info($"Created: {fileName}");
-        Logger.Info($"  Files: {Directory.EnumerateFiles(inputDir, "*", SearchOption.AllDirectories).Count()}");
     }
 
     private static void list(string archivePath)

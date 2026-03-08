@@ -4,10 +4,10 @@ namespace Alpacka.Compression;
 
 public class Deflate : ICompressionSystem
 {
-    public static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input)
+    public static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input, bool forceCompression)
     {
         // only use compression if beneficial
-        if (input.Length < 1024)
+        if (input.Length < 1024 && !forceCompression)
             return (input, AlpackFormat.CompressionType.None);
 
         using var output = new MemoryStream();
@@ -19,7 +19,7 @@ public class Deflate : ICompressionSystem
         var compressed = output.ToArray();
 
         // only use compression if it actually helped at all
-        if (compressed.Length < input.Length * 0.9)
+        if (compressed.Length < input.Length * 0.9 || forceCompression)
             return (compressed, AlpackFormat.CompressionType.Deflate);
 
         return (input, AlpackFormat.CompressionType.None);

@@ -4,16 +4,16 @@ namespace Alpacka.Compression;
 
 public class Zstd : ICompressionSystem
 {
-    public static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input)
+    public static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input, bool forceCompression)
     {
         // only use compression if beneficial
-        if (input.Length < 1024)
+        if (input.Length < 1024 && !forceCompression)
             return (input, AlpackFormat.CompressionType.None);
         
         using var compressor = new Compressor();
         var compressed = compressor.Wrap(input);
         
-        if (compressed.Length < input.Length * 0.9)
+        if (compressed.Length < input.Length * 0.9 || forceCompression)
             return (compressed, AlpackFormat.CompressionType.Zstd);
 
         return (input, AlpackFormat.CompressionType.None);

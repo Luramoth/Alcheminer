@@ -1,0 +1,3 @@
+﻿[Pack]
+Compression = "deflate"
+ForceCompression = "true"

@@ -61,10 +61,14 @@ public class AlpackWriter : IDisposable
     /// </summary>
     /// <param name="relativePath">File path from inside pack</param>
     /// <param name="sourcePath">File path from the disk to the file</param>
-    public void AddFileFromDisk(string relativePath, string sourcePath)
+    /// <returns>True if file was added to the archive, false if it was ignored</returns>
+    public bool AddFileFromDisk(string relativePath, string sourcePath)
     {
-        if (!sourcePath.EndsWith(".meta.toml"))
-            AddFile(relativePath, File.ReadAllBytes(sourcePath), MetaFile.LoadOrDefault($"{sourcePath}.meta.toml"));
+        if (sourcePath.EndsWith(".meta.toml"))
+            return false;
+        
+        AddFile(relativePath, File.ReadAllBytes(sourcePath), MetaFile.LoadOrDefault($"{sourcePath}.meta.toml"));
+        return true;
     }
 
     /// <summary>
@@ -81,7 +85,14 @@ public class AlpackWriter : IDisposable
         // For each file added, write its data to the archive
         foreach (var file in _entries)
         {
-            var(compressed, compressionType) = Zstd.Compress(file.Data);
+            var (compressed, compressionType) = file.MetaFile.GetCompressionType() switch
+            {
+                AlpackFormat.CompressionType.None => (file.Data, AlpackFormat.CompressionType.None),
+                AlpackFormat.CompressionType.Zstd => Zstd.Compress(file.Data, file.MetaFile.GetForceCompression()),
+                AlpackFormat.CompressionType.Deflate => Deflate.Compress(file.Data, file.MetaFile.GetForceCompression()),
+                AlpackFormat.CompressionType.Lz4 => Deflate.Compress(file.Data, file.MetaFile.GetForceCompression()),
+                _ => Zstd.Compress(file.Data, file.MetaFile.GetForceCompression())
+            };
             
             var entry = new AlpackFormat.Entry
             {

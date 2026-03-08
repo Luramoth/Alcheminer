@@ -1,2 +1,2 @@
-﻿[pack]
-compression = "deflate"
+﻿[Pack]
+Compression = "deflate"

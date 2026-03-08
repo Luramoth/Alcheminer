@@ -4,10 +4,10 @@ namespace Alpacka.Compression;
 
 public class LZ4 : ICompressionSystem
 {
-    public static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input)
+    public static (byte[] data, AlpackFormat.CompressionType) Compress(byte[] input, bool forceCompression)
     {
         // only use compression if beneficial
-        if (input.Length < 1024)
+        if (input.Length < 1024 && !forceCompression)
             return (input, AlpackFormat.CompressionType.None);
 
         int maxCompressedSize = LZ4Codec.MaximumOutputSize(input.Length);
@@ -21,7 +21,7 @@ public class LZ4 : ICompressionSystem
         if (compressedSize < compressed.Length)
             Array.Resize(ref compressed, compressedSize);
 
-        if (compressed.Length < input.Length * 0.9)
+        if (compressed.Length < input.Length * 0.9 || forceCompression)
             return (compressed, AlpackFormat.CompressionType.Lz4);
 
         return (input, AlpackFormat.CompressionType.None);
